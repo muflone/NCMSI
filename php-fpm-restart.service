@@ -1,0 +1,9 @@
+[Unit]
+Description=PHP-fpm restart
+
+[Service]
+ExecStart=systemctl restart php-fpm
+TimeoutSec=120
+
+[Install]
+WantedBy=basic.target

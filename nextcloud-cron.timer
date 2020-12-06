@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Nextcloud cron.php
+
+[Timer]
+OnBootSec=5min
+#OnUnitActiveSec=120min
+OnUnitActiveSec=12hour
+Unit=nextcloud-cron.service
+
+[Install]
+WantedBy=timers.target

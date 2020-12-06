@@ -1,0 +1,12 @@
+[Unit]
+Description=Nextcloud cron.php job
+
+[Service]
+#User=http
+ExecStartPre=systemctl restart php-fpm
+ExecStart=sudo -u http /usr/bin/php -f /usr/share/webapps/nextcloud/cron.php
+ExecStartPost=systemctl restart php-fpm
+TimeoutSec=120
+
+[Install]
+WantedBy=basic.target

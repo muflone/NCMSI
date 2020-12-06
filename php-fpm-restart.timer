@@ -1,0 +1,9 @@
+[Unit]
+Description=Restart php-fpm
+
+[Timer]
+OnUnitActiveSec=6hour
+Unit=php-fpm-restart.service
+
+[Install]
+WantedBy=timers.target
