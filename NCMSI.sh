@@ -204,6 +204,32 @@ case ${_STEP} in
     nohup reboot -f &> /dev/null < /dev/null &
     exit 0
     ;;
+  3)
+    # Restore database from backup
+    tar xzf "/root/nextcloud_apps.tar.gz" -C "/home/nextcloud/"
+    tar xzf "/root/nextcloud_data.tar.gz" -C "/home/nextcloud/"
+    gzip -dc "/root/nextcloud_sql.sql.gz" | mysql -u nextcloud -p nextcloud
+    /usr/local/bin/nextcloud-set-permissions.sh
+    cp "/root/config.php" "/etc/webapps/nextcloud/config/config.php"
+    # Update Nectcloud
+    sudo -u http /usr/share/webapps/nextcloud/occ maintenance:mode --off
+    sudo -u http /usr/share/webapps/nextcloud/occ upgrade
+    sudo -u http /usr/share/webapps/nextcloud/occ app:update --all
+    sudo -u http /usr/share/webapps/nextcloud/occ app:enable twofactor_totp
+    sudo -u http /usr/share/webapps/nextcloud/occ db:add-missing-columns
+    sudo -u http /usr/share/webapps/nextcloud/occ db:add-missing-indices
+    sudo -u http /usr/share/webapps/nextcloud/occ db:add-missing-primary-keys
+    sudo -u http /usr/share/webapps/nextcloud/occ db:convert-filecache-bigint
+    sudo -u http /usr/share/webapps/nextcloud/occ db:convert-mysql-charset
+    sudo -u http /usr/share/webapps/nextcloud/occ maintenance:mode --off
+    /usr/local/bin/nextcloud-set-permissions.sh
+    exit 0
+    ;;
+  *)
+    # This step is not used
+    do_usage
+    exit 3
+    ;;
 esac
 
 exit 4
